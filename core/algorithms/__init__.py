@@ -1,0 +1,4 @@
+from core.algorithms.search_engine import search_engine_instance
+from core.algorithms.progress_intervals import merge_new_interval, calculate_watched_seconds, process_video_progress_ping
+from core.algorithms.course_recommender import course_recommender_instance
+

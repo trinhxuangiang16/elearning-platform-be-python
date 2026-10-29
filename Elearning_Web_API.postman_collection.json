@@ -1,0 +1,1626 @@
+{
+  "info": {
+    "name": "Hệ thống Quản lý Đào tạo Trực tuyến - E-Learning Web API (Full 44 Endpoints)",
+    "description": "Bộ sưu tập kiểm thử đầy đủ toàn bộ các REST API (GET, POST, PUT, DELETE) trong hệ thống E-Learning.",
+    "schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+  },
+  "variable": [
+    {
+      "key": "baseUrl",
+      "value": "http://localhost:5000",
+      "type": "string"
+    },
+    {
+      "key": "accessToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0YWlLaG9hbiI6ImdpYW5ndmllbjAxIiwiZW1haWwiOiJuYW0ubGVAZWxlYXJuaW5nLnZuIiwibWFMb2FpTmd1b2lEdW5nIjoiR1YiLCJleHAiOjE3OTM4MTk2ODl9.YhnIWPwUgAw9UI4sU7ZW4xMbQ6DowXOn6NlVvmeh2dw",
+      "type": "string"
+    },
+    {
+      "key": "sectionId",
+      "value": "283",
+      "type": "string"
+    },
+    {
+      "key": "lessonId",
+      "value": "846",
+      "type": "string"
+    },
+    {
+      "key": "assignmentId",
+      "value": "259",
+      "type": "string"
+    },
+    {
+      "key": "submissionId",
+      "value": "5",
+      "type": "string"
+    },
+    {
+      "key": "noteId",
+      "value": "3",
+      "type": "string"
+    },
+    {
+      "key": "adminToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0YWlLaG9hbiI6ImdpYW5ndmllbjAxIiwiZW1haWwiOiJuYW0ubGVAZWxlYXJuaW5nLnZuIiwibWFMb2FpTmd1b2lEdW5nIjoiR1YiLCJleHAiOjE3OTM4MTk2ODl9.YhnIWPwUgAw9UI4sU7ZW4xMbQ6DowXOn6NlVvmeh2dw",
+      "type": "string"
+    },
+    {
+      "key": "studentToken",
+      "value": "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJ0YWlLaG9hbiI6InN0dWRlbnQwMSIsImVtYWlsIjoiYmFvLnZvQHNpbmh2aWVuLmVkdS52biIsIm1hTG9haU5ndW9pRHVuZyI6IkhWIiwiZXhwIjoxNzkzODE5NjkwfQ.TbQsWhTMQVVAyrMqVV94CmrHDK-5ei_JYlF08z2RYv4",
+      "type": "string"
+    },
+    {
+      "key": "regTaiKhoan",
+      "value": "hocvien_moi",
+      "type": "string"
+    },
+    {
+      "key": "regEmail",
+      "value": "duc.pham@sinhvien.edu.vn",
+      "type": "string"
+    }
+  ],
+  "item": [
+    {
+      "name": "1. Danh sách API URL & Trạng thái Hệ thống",
+      "item": [
+        {
+          "name": "1.1 Xem Danh sách toàn bộ API URL (GET /api)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api",
+            "description": "### Mục đích\nKiểm tra trạng thái máy chủ và hiển thị danh mục API qua đường dẫn tiền tố `/api`.\n\n- **Quyền hạn**: Công khai (Không cần đăng nhập).\n- **Phương thức**: `GET /api`\n- **Kết quả trả về**: Mã `200 OK`, cấu trúc phản hồi JSON chuẩn gồm trạng thái, thời gian hệ thống và danh sách các API URL."
+          },
+          "description": "### Mục đích\nKiểm tra trạng thái máy chủ và hiển thị danh mục API qua đường dẫn tiền tố `/api`.\n\n- **Quyền hạn**: Công khai (Không cần đăng nhập).\n- **Phương thức**: `GET /api`\n- **Kết quả trả về**: Mã `200 OK`, cấu trúc phản hồi JSON chuẩn gồm trạng thái, thời gian hệ thống và danh sách các API URL.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Nhóm API kiểm tra trạng thái máy chủ (Health Check) và xuất ra danh mục toàn bộ các API URL có trong hệ thống."
+    },
+    {
+      "name": "2. Quản lý Người dùng & Xác thực (10 API)",
+      "item": [
+        {
+          "name": "2.1 Đăng ký Tài khoản Học viên (POST /api/QuanLyNguoiDung/DangKy)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"taiKhoan\": \"{{regTaiKhoan}}\",\n  \"matKhau\": \"123456\",\n  \"hoTen\": \"Phạm Minh Đức\",\n  \"email\": \"{{regEmail}}\",\n  \"soDT\": \"0905123456\",\n  \"maNhom\": \"GP01\",\n  \"planCode\": \"ind_monthly\",\n  \"price\": 199000\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/DangKy",
+            "description": "### Mục đích\nĐăng ký tài khoản học viên mới với gói học phí quy chuẩn tính theo đơn vị tiền tệ VNĐ (499.000 VNĐ, 999.000 VNĐ, 1.999.000 VNĐ).\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `POST /api/QuanLyNguoiDung/DangKy`\n- **Dữ liệu gửi**: `taiKhoan`, `matKhau`, `hoTen`, `email`, `soDT`, `maNhom`, `goiDangKy`.\n- **Kết quả trả về**: Mã `200 OK`, thông tin tài khoản vừa tạo và số tiền học phí VNĐ đã áp dụng."
+          },
+          "description": "### Mục đích\nĐăng ký tài khoản học viên mới với gói học phí quy chuẩn tính theo đơn vị tiền tệ VNĐ (499.000 VNĐ, 999.000 VNĐ, 1.999.000 VNĐ).\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `POST /api/QuanLyNguoiDung/DangKy`\n- **Dữ liệu gửi**: `taiKhoan`, `matKhau`, `hoTen`, `email`, `soDT`, `maNhom`, `goiDangKy`.\n- **Kết quả trả về**: Mã `200 OK`, thông tin tài khoản vừa tạo và số tiền học phí VNĐ đã áp dụng.",
+          "event": [
+            {
+              "listen": "prerequest",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "const rand = Math.floor(Math.random() * 90000) + 10000;",
+                  "pm.collectionVariables.set(\"regTaiKhoan\", \"hocvien_\" + rand);",
+                  "pm.collectionVariables.set(\"regEmail\", \"hv_\" + rand + \"@sinhvien.edu.vn\");"
+                ]
+              }
+            },
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2.2 Đăng nhập Giảng viên / Quản trị viên (POST /api/QuanLyNguoiDung/DangNhap)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.content && jsonData.content.accessToken) {",
+                  "    pm.collectionVariables.set(\"adminToken\", jsonData.content.accessToken);",
+                  "    pm.collectionVariables.set(\"accessToken\", jsonData.content.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"taiKhoan\": \"giangvien01\",\n  \"matKhau\": \"123456\"\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/DangNhap",
+            "description": "### Mục đích\nXác thực tài khoản và mật khẩu Bcrypt của Giảng viên / Quản trị viên (GV / GVU), cấp phát chuỗi khóa JWT (accessToken) có thời hạn 7 ngày.\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `POST /api/QuanLyNguoiDung/DangNhap`\n- **Dữ liệu gửi**: `taiKhoan`, `matKhau`.\n- **Tự động hóa Postman**: Script tự động lưu chuỗi `accessToken` vào biến môi trường `adminToken` để các request quản trị phía sau sử dụng."
+          },
+          "description": "### Mục đích\nXác thực tài khoản và mật khẩu Bcrypt của Giảng viên / Quản trị viên (GV / GVU), cấp phát chuỗi khóa JWT (accessToken) có thời hạn 7 ngày.\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `POST /api/QuanLyNguoiDung/DangNhap`\n- **Dữ liệu gửi**: `taiKhoan`, `matKhau`.\n- **Tự động hóa Postman**: Script tự động lưu chuỗi `accessToken` vào biến môi trường `adminToken` để các request quản trị phía sau sử dụng."
+        },
+        {
+          "name": "2.3 Đăng nhập Học viên (POST /api/QuanLyNguoiDung/DangNhap)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.content && jsonData.content.accessToken) {",
+                  "    pm.collectionVariables.set(\"studentToken\", jsonData.content.accessToken);",
+                  "    pm.collectionVariables.set(\"accessToken\", jsonData.content.accessToken);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"taiKhoan\": \"student01\",\n  \"matKhau\": \"123456\"\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/DangNhap",
+            "description": "### Mục đích\nXác thực tài khoản và mật khẩu Bcrypt của Học viên (HV), cấp phát chuỗi khóa JWT (accessToken) có thời hạn 7 ngày.\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `POST /api/QuanLyNguoiDung/DangNhap`\n- **Dữ liệu gửi**: `taiKhoan`, `matKhau`.\n- **Tự động hóa Postman**: Script tự động lưu chuỗi `accessToken` vào biến môi trường `studentToken` để các request học tập của học viên phía sau sử dụng."
+          },
+          "description": "### Mục đích\nXác thực tài khoản và mật khẩu Bcrypt của Học viên (HV), cấp phát chuỗi khóa JWT (accessToken) có thời hạn 7 ngày.\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `POST /api/QuanLyNguoiDung/DangNhap`\n- **Dữ liệu gửi**: `taiKhoan`, `matKhau`.\n- **Tự động hóa Postman**: Script tự động lưu chuỗi `accessToken` vào biến môi trường `studentToken` để các request học tập của học viên phía sau sử dụng."
+        },
+        {
+          "name": "2.4 Thông tin Tài khoản & Khóa học đã Ghi danh (POST /api/QuanLyNguoiDung/ThongTinTaiKhoan)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/ThongTinTaiKhoan",
+            "description": "### Mục đích\nLấy thông tin hồ sơ chi tiết của người dùng đang đăng nhập, kèm danh sách các khóa học đã ghi danh, tiến độ hoàn thành và điểm số GPA.\n\n- **Quyền hạn**: Cần xác thực Bearer Token (Học viên hoặc Giảng viên).\n- **Phương thức**: `POST /api/QuanLyNguoiDung/ThongTinTaiKhoan`\n- **Kết quả trả về**: Thông tin cá nhân, vai trò và danh sách `danhSachKhoaHocGhiDanh`."
+          },
+          "description": "### Mục đích\nLấy thông tin hồ sơ chi tiết của người dùng đang đăng nhập, kèm danh sách các khóa học đã ghi danh, tiến độ hoàn thành và điểm số GPA.\n\n- **Quyền hạn**: Cần xác thực Bearer Token (Học viên hoặc Giảng viên).\n- **Phương thức**: `POST /api/QuanLyNguoiDung/ThongTinTaiKhoan`\n- **Kết quả trả về**: Thông tin cá nhân, vai trò và danh sách `danhSachKhoaHocGhiDanh`.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2.5 Cập nhật Thông tin Người dùng (PUT /api/QuanLyNguoiDung/CapNhatThongTinNguoiDung)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"hoTen\": \"Lê Hoàng Nam\",\n  \"soDT\": \"0912345678\"\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/CapNhatThongTinNguoiDung",
+            "description": "### Mục đích\nCập nhật thông tin hồ sơ người dùng (họ tên, email, số điện thoại, tiểu sử, mật khẩu mới).\n\n- **Quyền hạn**: Cần xác thực Bearer Token.\n- **Phương thức**: `PUT /api/QuanLyNguoiDung/CapNhatThongTinNguoiDung`\n- **Dữ liệu gửi**: `taiKhoan`, `hoTen`, `email`, `soDT`, `bio`, `matKhau`.\n- **Kết quả trả về**: Thông tin hồ sơ sau khi cập nhật thành công."
+          },
+          "description": "### Mục đích\nCập nhật thông tin hồ sơ người dùng (họ tên, email, số điện thoại, tiểu sử, mật khẩu mới).\n\n- **Quyền hạn**: Cần xác thực Bearer Token.\n- **Phương thức**: `PUT /api/QuanLyNguoiDung/CapNhatThongTinNguoiDung`\n- **Dữ liệu gửi**: `taiKhoan`, `hoTen`, `email`, `soDT`, `bio`, `matKhau`.\n- **Kết quả trả về**: Thông tin hồ sơ sau khi cập nhật thành công.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2.6 Lấy Danh sách Người dùng (GET /api/QuanLyNguoiDung/LayDanhSachNguoiDung)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/LayDanhSachNguoiDung",
+            "description": "### Mục đích\nQuản trị viên hoặc Giảng viên lấy danh sách toàn bộ người dùng trong hệ thống (phân trang hoặc toàn phần).\n\n- **Quyền hạn**: Quản trị viên hoặc Giảng viên (`GVU`, `GV`).\n- **Phương thức**: `GET /api/QuanLyNguoiDung/LayDanhSachNguoiDung`\n- **Kết quả trả về**: Danh sách người dùng kèm vai trò hiển thị tiếng Việt (Học viên, Giảng viên, Giáo vụ)."
+          },
+          "description": "### Mục đích\nQuản trị viên hoặc Giảng viên lấy danh sách toàn bộ người dùng trong hệ thống (phân trang hoặc toàn phần).\n\n- **Quyền hạn**: Quản trị viên hoặc Giảng viên (`GVU`, `GV`).\n- **Phương thức**: `GET /api/QuanLyNguoiDung/LayDanhSachNguoiDung`\n- **Kết quả trả về**: Danh sách người dùng kèm vai trò hiển thị tiếng Việt (Học viên, Giảng viên, Giáo vụ).",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2.7 Tìm kiếm Người dùng (GET /api/QuanLyNguoiDung/TimKiemNguoiDung)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/TimKiemNguoiDung?tuKhoa=Bảo",
+            "description": "### Mục đích\nTìm kiếm người dùng theo tên tài khoản hoặc họ tên, hỗ trợ tìm kiếm tiếng Việt có dấu và không dấu.\n\n- **Quyền hạn**: Công khai / Quản trị viên.\n- **Phương thức**: `GET /api/QuanLyNguoiDung/TimKiemNguoiDung?tuKhoa=...`\n- **Tham số**: `tuKhoa` (chuỗi tìm kiếm).\n- **Kết quả trả về**: Danh sách người dùng phù hợp với từ khóa."
+          },
+          "description": "### Mục đích\nTìm kiếm người dùng theo tên tài khoản hoặc họ tên, hỗ trợ tìm kiếm tiếng Việt có dấu và không dấu.\n\n- **Quyền hạn**: Công khai / Quản trị viên.\n- **Phương thức**: `GET /api/QuanLyNguoiDung/TimKiemNguoiDung?tuKhoa=...`\n- **Tham số**: `tuKhoa` (chuỗi tìm kiếm).\n- **Kết quả trả về**: Danh sách người dùng phù hợp với từ khóa.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2.8 Thêm Người dùng Mới (POST /api/QuanLyNguoiDung/ThemNguoiDung)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"taiKhoan\": \"hocvien_them_moi\",\n  \"matKhau\": \"123456\",\n  \"hoTen\": \"Hoàng Gia Huy\",\n  \"email\": \"huy.hoang@sinhvien.edu.vn\",\n  \"soDT\": \"0918123456\",\n  \"maLoaiNguoiDung\": \"HV\",\n  \"maNhom\": \"GP01\"\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/ThemNguoiDung",
+            "description": "### Mục đích\nQuản trị viên tạo mới tài khoản người dùng trực tiếp trên hệ thống (chỉ định vai trò Học viên, Giảng viên hoặc Giáo vụ).\n\n- **Quyền hạn**: Quản trị viên (`GVU`, `GV`).\n- **Phương thức**: `POST /api/QuanLyNguoiDung/ThemNguoiDung`\n- **Dữ liệu gửi**: `taiKhoan`, `matKhau`, `hoTen`, `email`, `soDT`, `maLoaiNguoiDung`, `maNhom`.\n- **Kết quả trả về**: Thông tin người dùng vừa được tạo mới thành công."
+          },
+          "description": "### Mục đích\nQuản trị viên tạo mới tài khoản người dùng trực tiếp trên hệ thống (chỉ định vai trò Học viên, Giảng viên hoặc Giáo vụ).\n\n- **Quyền hạn**: Quản trị viên (`GVU`, `GV`).\n- **Phương thức**: `POST /api/QuanLyNguoiDung/ThemNguoiDung`\n- **Dữ liệu gửi**: `taiKhoan`, `matKhau`, `hoTen`, `email`, `soDT`, `maLoaiNguoiDung`, `maNhom`.\n- **Kết quả trả về**: Thông tin người dùng vừa được tạo mới thành công.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2.9 Xóa Người dùng (DELETE /api/QuanLyNguoiDung/XoaNguoiDung)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/XoaNguoiDung?TaiKhoan=hocvien_them_moi",
+            "description": "### Mục đích\nQuản trị viên xóa tài khoản người dùng khỏi hệ thống (có kiểm tra ràng buộc dữ liệu liên quan).\n\n- **Quyền hạn**: Quản trị viên (`GVU`, `GV`).\n- **Phương thức**: `DELETE /api/QuanLyNguoiDung/XoaNguoiDung?taiKhoan=...`\n- **Tham số**: `taiKhoan` cần xóa.\n- **Kết quả trả về**: Thông báo xóa thành công tài khoản."
+          },
+          "description": "### Mục đích\nQuản trị viên xóa tài khoản người dùng khỏi hệ thống (có kiểm tra ràng buộc dữ liệu liên quan).\n\n- **Quyền hạn**: Quản trị viên (`GVU`, `GV`).\n- **Phương thức**: `DELETE /api/QuanLyNguoiDung/XoaNguoiDung?taiKhoan=...`\n- **Tham số**: `taiKhoan` cần xóa.\n- **Kết quả trả về**: Thông báo xóa thành công tài khoản.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2.10 Danh sách Khóa học Chờ xét duyệt (POST /api/QuanLyNguoiDung/LayDanhSachKhoaHocChoXetDuyet)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"taiKhoan\": \"student01\"\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/LayDanhSachKhoaHocChoXetDuyet",
+            "description": "### Mục đích\nTra cứu danh sách các khóa học đang trong trạng thái chờ xét duyệt của một tài khoản người dùng.\n\n- **Quyền hạn**: Quản trị viên hoặc Giảng viên.\n- **Phương thức**: `POST /api/QuanLyNguoiDung/LayDanhSachKhoaHocChoXetDuyet`\n- **Dữ liệu gửi**: `{ \"taiKhoan\": \"...\" }`\n- **Kết quả trả về**: Danh sách khóa học chờ xét duyệt."
+          },
+          "description": "### Mục đích\nTra cứu danh sách các khóa học đang trong trạng thái chờ xét duyệt của một tài khoản người dùng.\n\n- **Quyền hạn**: Quản trị viên hoặc Giảng viên.\n- **Phương thức**: `POST /api/QuanLyNguoiDung/LayDanhSachKhoaHocChoXetDuyet`\n- **Dữ liệu gửi**: `{ \"taiKhoan\": \"...\" }`\n- **Kết quả trả về**: Danh sách khóa học chờ xét duyệt.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "2.11 Danh sách Học viên trong Khóa học (POST /api/QuanLyNguoiDung/LayDanhSachHocVienKhoaHoc)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maKhoaHoc\": \"FE_REACT\"\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyNguoiDung/LayDanhSachHocVienKhoaHoc",
+            "description": "### Mục đích\nLấy danh sách toàn bộ học viên đang theo học trong một khóa học cụ thể.\n\n- **Quyền hạn**: Quản trị viên hoặc Giảng viên.\n- **Phương thức**: `POST /api/QuanLyNguoiDung/LayDanhSachHocVienKhoaHoc`\n- **Dữ liệu gửi**: `{ \"maKhoaHoc\": \"...\" }`\n- **Kết quả trả về**: Danh sách học viên đã ghi danh vào khóa học."
+          },
+          "description": "### Mục đích\nLấy danh sách toàn bộ học viên đang theo học trong một khóa học cụ thể.\n\n- **Quyền hạn**: Quản trị viên hoặc Giảng viên.\n- **Phương thức**: `POST /api/QuanLyNguoiDung/LayDanhSachHocVienKhoaHoc`\n- **Dữ liệu gửi**: `{ \"maKhoaHoc\": \"...\" }`\n- **Kết quả trả về**: Danh sách học viên đã ghi danh vào khóa học.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Nhóm API xác thực đăng ký, đăng nhập Bcrypt/JWT, quản lý hồ sơ cá nhân và các chức năng quản trị tài khoản người dùng."
+    },
+    {
+      "name": "3. Quản lý Khóa học, Tìm kiếm BM25 & Gợi ý (11 API)",
+      "item": [
+        {
+          "name": "3.1 Lấy Danh mục Khóa học (GET /api/QuanLyKhoaHoc/LayDanhMucKhoaHoc)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/LayDanhMucKhoaHoc",
+            "description": "### Mục đích\nLấy danh sách tất cả các danh mục lĩnh vực đào tạo có trong hệ thống (10 danh mục chuẩn).\n\n- **Quyền hạn**: Công khai (Khách vãng lai, Học viên, Giảng viên).\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayDanhMucKhoaHoc`\n- **Kết quả trả về**: Mảng 10 danh mục kèm mã và tên danh mục tiếng Việt."
+          },
+          "description": "### Mục đích\nLấy danh sách tất cả các danh mục lĩnh vực đào tạo có trong hệ thống (10 danh mục chuẩn).\n\n- **Quyền hạn**: Công khai (Khách vãng lai, Học viên, Giảng viên).\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayDanhMucKhoaHoc`\n- **Kết quả trả về**: Mảng 10 danh mục kèm mã và tên danh mục tiếng Việt.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.2 Lấy Khóa học theo Danh mục (GET /api/QuanLyKhoaHoc/LayKhoaHocTheoDanhMuc)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/LayKhoaHocTheoDanhMuc?maDanhMuc=FRONT_END",
+            "description": "### Mục đích\nLọc và lấy danh sách các khóa học thuộc một danh mục cụ thể theo mã danh mục.\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayKhoaHocTheoDanhMuc?maDanhMuc=...`\n- **Tham số**: `maDanhMuc` (ví dụ: `FRONTEND`, `BACKEND`, `DATA_AI`).\n- **Kết quả trả về**: Danh sách khóa học thuộc danh mục đó."
+          },
+          "description": "### Mục đích\nLọc và lấy danh sách các khóa học thuộc một danh mục cụ thể theo mã danh mục.\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayKhoaHocTheoDanhMuc?maDanhMuc=...`\n- **Tham số**: `maDanhMuc` (ví dụ: `FRONTEND`, `BACKEND`, `DATA_AI`).\n- **Kết quả trả về**: Danh sách khóa học thuộc danh mục đó.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.3 Lấy Danh sách Khóa học & Gợi ý Cá nhân hóa (GET /api/QuanLyKhoaHoc/LayDanhSachKhoaHoc)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/LayDanhSachKhoaHoc",
+            "description": "### Mục đích\nLấy danh sách khóa học, tự động kích hoạt **Hook 3: Gợi ý khóa học cá nhân hóa (Personalized Course Recommender)** khi request đính kèm Bearer Token của học viên.\n\n- **Quyền hạn**: Học viên (đã đăng nhập).\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayDanhSachKhoaHoc`\n- **Thuật toán Hook 3**: Tính điểm dựa trên vector hóa TF-IDF, độ tương đồng Cosine trên RAM và thăng tiến cấp độ (Level Progression Boost: CoBan -> TrungCap -> NangCao)."
+          },
+          "description": "### Mục đích\nLấy danh sách khóa học, tự động kích hoạt **Hook 3: Gợi ý khóa học cá nhân hóa (Personalized Course Recommender)** khi request đính kèm Bearer Token của học viên.\n\n- **Quyền hạn**: Học viên (đã đăng nhập).\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayDanhSachKhoaHoc`\n- **Thuật toán Hook 3**: Tính điểm dựa trên vector hóa TF-IDF, độ tương đồng Cosine trên RAM và thăng tiến cấp độ (Level Progression Boost: CoBan -> TrungCap -> NangCao).",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.4 Tìm kiếm Khóa học Thông minh BM25 / Chịu lỗi chính tả (GET /api/QuanLyKhoaHoc/LayDanhSachKhoaHoc?tenKhoaHoc=)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/LayDanhSachKhoaHoc?tenKhoaHoc=pyhton",
+            "description": "### Mục đích\nTìm kiếm khóa học bằng **Hook 1: InMemory Course Search Engine** với từ khóa khớp chuẩn.\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayDanhSachKhoaHoc?tenKhoaHoc=python%20react`\n- **Thuật toán Hook 1**: Tra cứu O(1) trên Inverted Index, tìm tiền tố trên cây Trie, xếp hạng xác suất Okapi BM25 và trả về khóa học phù hợp nhất bằng Heapq."
+          },
+          "description": "### Mục đích\nTìm kiếm khóa học bằng **Hook 1: InMemory Course Search Engine** với từ khóa khớp chuẩn.\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayDanhSachKhoaHoc?tenKhoaHoc=python%20react`\n- **Thuật toán Hook 1**: Tra cứu O(1) trên Inverted Index, tìm tiền tố trên cây Trie, xếp hạng xác suất Okapi BM25 và trả về khóa học phù hợp nhất bằng Heapq.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.5 Lấy Thông tin Chi tiết Khóa học (GET /api/QuanLyKhoaHoc/LayThongTinKhoaHoc)",
+          "request": {
+            "method": "GET",
+            "header": [],
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/LayThongTinKhoaHoc?maKhoaHoc=FE_REACT",
+            "description": "### Mục đích\nKiểm thử tính năng **chịu lỗi chính tả bằng khoảng cách chỉnh sửa Bounded Levenshtein Distance (k <= 2)** của Hook 1 khi người dùng gõ sai từ khóa.\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayDanhSachKhoaHoc?tenKhoaHoc=pyhton`\n- **Thuật toán Hook 1**: Từ khóa sai `pyhton` được quy hoạch động nhận diện thành `python` và xếp hạng chính xác các khóa học Python lên đầu."
+          },
+          "description": "### Mục đích\nKiểm thử tính năng **chịu lỗi chính tả bằng khoảng cách chỉnh sửa Bounded Levenshtein Distance (k <= 2)** của Hook 1 khi người dùng gõ sai từ khóa.\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayDanhSachKhoaHoc?tenKhoaHoc=pyhton`\n- **Thuật toán Hook 1**: Từ khóa sai `pyhton` được quy hoạch động nhận diện thành `python` và xếp hạng chính xác các khóa học Python lên đầu.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.6 Thêm Khóa học Mới (POST /api/QuanLyKhoaHoc/ThemKhoaHoc)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maKhoaHoc\": \"BE_DJANGO_REST\",\n  \"tenKhoaHoc\": \"Xây dựng Web API với Python và Django REST Framework\",\n  \"biAnh\": \"xay-dung-web-api-django\",\n  \"moTa\": \"Khóa học lập trình Back-End thực chiến với Python, Django ORM và bảo mật JWT.\",\n  \"luotXem\": 500,\n  \"danhGia\": 5,\n  \"capDo\": \"TrungCap\",\n  \"thoiLuongGio\": 65,\n  \"maNhom\": \"GP01\",\n  \"maDanhMucKhoahoc\": \"BACK_END\",\n  \"taiKhoanNguoiTao\": \"giangvien01\"\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/ThemKhoaHoc",
+            "description": "### Mục đích\nXem thông tin chi tiết của một khóa học (mô tả, số lượt xem, đánh giá, giảng viên tạo, cấp độ và mức học phí tính bằng VNĐ).\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayThongTinKhoaHoc?maKhoaHoc=...`\n- **Kết quả trả về**: Chi tiết khóa học kèm mức giá quy chuẩn VNĐ (499.000 VNĐ, 799.000 VNĐ, 1.199.000 VNĐ)."
+          },
+          "description": "### Mục đích\nXem thông tin chi tiết của một khóa học (mô tả, số lượt xem, đánh giá, giảng viên tạo, cấp độ và mức học phí tính bằng VNĐ).\n\n- **Quyền hạn**: Công khai.\n- **Phương thức**: `GET /api/QuanLyKhoaHoc/LayThongTinKhoaHoc?maKhoaHoc=...`\n- **Kết quả trả về**: Chi tiết khóa học kèm mức giá quy chuẩn VNĐ (499.000 VNĐ, 799.000 VNĐ, 1.199.000 VNĐ).",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.7 Cập nhật Khóa học (PUT /api/QuanLyKhoaHoc/CapNhatKhoaHoc)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maKhoaHoc\": \"BE_DJANGO_REST\",\n  \"tenKhoaHoc\": \"Xây dựng Web API Chuyên sâu với Python Django 5\",\n  \"moTa\": \"Cập nhật nội dung nâng cao cho khóa học Django 5.\",\n  \"thoiLuongGio\": 75\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/CapNhatKhoaHoc",
+            "description": "### Mục đích\nGiảng viên hoặc Giáo vụ tạo mới một khóa học trong hệ thống. Tự động kích hoạt Django Signals để cập nhật lại chỉ mục tìm kiếm và ma trận gợi ý trên RAM.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên (`GV`, `GVU`).\n- **Phương thức**: `POST /api/QuanLyKhoaHoc/ThemKhoaHoc`\n- **Dữ liệu gửi**: `maKhoaHoc`, `tenKhoaHoc`, `moTa`, `maDanhMuc`, `capDo`, `thoiLuongGio`."
+          },
+          "description": "### Mục đích\nGiảng viên hoặc Giáo vụ tạo mới một khóa học trong hệ thống. Tự động kích hoạt Django Signals để cập nhật lại chỉ mục tìm kiếm và ma trận gợi ý trên RAM.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên (`GV`, `GVU`).\n- **Phương thức**: `POST /api/QuanLyKhoaHoc/ThemKhoaHoc`\n- **Dữ liệu gửi**: `maKhoaHoc`, `tenKhoaHoc`, `moTa`, `maDanhMuc`, `capDo`, `thoiLuongGio`.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.8 Upload Hình ảnh Khóa học (POST /api/QuanLyKhoaHoc/UploadHinhAnhKhoaHoc)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "body": {
+              "mode": "formdata",
+              "formdata": [
+                {
+                  "key": "file",
+                  "type": "file",
+                  "src": []
+                },
+                {
+                  "key": "maKhoaHoc",
+                  "value": "FE_REACT",
+                  "type": "text"
+                }
+              ]
+            },
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/UploadHinhAnhKhoaHoc",
+            "description": "### Mục đích\nGiảng viên cập nhật thông tin nội dung của khóa học đã tồn tại.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `PUT /api/QuanLyKhoaHoc/CapNhatKhoaHoc`\n- **Dữ liệu gửi**: `maKhoaHoc`, `tenKhoaHoc`, `moTa`, `maDanhMuc`, `capDo`."
+          },
+          "description": "### Mục đích\nGiảng viên cập nhật thông tin nội dung của khóa học đã tồn tại.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `PUT /api/QuanLyKhoaHoc/CapNhatKhoaHoc`\n- **Dữ liệu gửi**: `maKhoaHoc`, `tenKhoaHoc`, `moTa`, `maDanhMuc`, `capDo`.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.9 Đăng ký / Ghi danh Khóa học (POST /api/QuanLyKhoaHoc/DangKyKhoaHoc)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maKhoaHoc\": \"FE_REACT\",\n  \"taiKhoan\": \"student01\"\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/DangKyKhoaHoc",
+            "description": "### Mục đích\nTải tệp hình ảnh đại diện (avatar/thumbnail) cho khóa học lên máy chủ và lưu đường dẫn vào cơ sở dữ liệu.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `POST /api/QuanLyKhoaHoc/UploadHinhAnhKhoaHoc`\n- **Dữ liệu gửi**: FormData (file ảnh và mã khóa học)."
+          },
+          "description": "### Mục đích\nTải tệp hình ảnh đại diện (avatar/thumbnail) cho khóa học lên máy chủ và lưu đường dẫn vào cơ sở dữ liệu.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `POST /api/QuanLyKhoaHoc/UploadHinhAnhKhoaHoc`\n- **Dữ liệu gửi**: FormData (file ảnh và mã khóa học).",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.10 Hủy Ghi danh Khóa học (POST /api/QuanLyKhoaHoc/HuyGhiDanh)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maKhoaHoc\": \"BE_DJANGO_REST\",\n  \"taiKhoan\": \"student01\"\n}"
+            },
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/HuyGhiDanh",
+            "description": "### Mục đích\nHọc viên ghi danh tham gia một khóa học trực tuyến.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/QuanLyKhoaHoc/DangKyKhoaHoc`\n- **Dữ liệu gửi**: `{ \"maKhoaHoc\": \"...\", \"taiKhoan\": \"...\" }`\n- **Kết quả trả về**: Bản ghi ghi danh mới trong bảng `GhiDanhKhoaHoc`."
+          },
+          "description": "### Mục đích\nHọc viên ghi danh tham gia một khóa học trực tuyến.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/QuanLyKhoaHoc/DangKyKhoaHoc`\n- **Dữ liệu gửi**: `{ \"maKhoaHoc\": \"...\", \"taiKhoan\": \"...\" }`\n- **Kết quả trả về**: Bản ghi ghi danh mới trong bảng `GhiDanhKhoaHoc`.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "3.11 Xóa Khóa học (DELETE /api/QuanLyKhoaHoc/XoaKhoaHoc)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/QuanLyKhoaHoc/XoaKhoaHoc?maKhoaHoc=BE_DJANGO_REST",
+            "description": "### Mục đích\nHọc viên hủy ghi danh khỏi một khóa học đã đăng ký.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/QuanLyKhoaHoc/HuyGhiDanh`\n- **Dữ liệu gửi**: `{ \"maKhoaHoc\": \"...\", \"taiKhoan\": \"...\" }`\n- **Kết quả trả về**: Cập nhật trạng thái hoặc xóa bản ghi ghi danh."
+          },
+          "description": "### Mục đích\nHọc viên hủy ghi danh khỏi một khóa học đã đăng ký.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/QuanLyKhoaHoc/HuyGhiDanh`\n- **Dữ liệu gửi**: `{ \"maKhoaHoc\": \"...\", \"taiKhoan\": \"...\" }`\n- **Kết quả trả về**: Cập nhật trạng thái hoặc xóa bản ghi ghi danh.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Nhóm API quản lý danh mục đào tạo, xem khóa học, thêm/sửa/xóa khóa học, ghi danh và tích hợp 2 Hook thuật toán: Tìm kiếm BM25 (chịu lỗi chính tả Levenshtein) và Gợi ý khóa học cá nhân hóa."
+    },
+    {
+      "name": "4. Quản lý Giáo trình: Đề cương, Chương học & Bài học (7 API)",
+      "item": [
+        {
+          "name": "4.1 Xem Đề cương Chương & Bài học của Khóa học (GET /api/v1/courses/<maKhoaHoc>/syllabus)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{accessToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/courses/FE_REACT/syllabus",
+            "description": "### Mục đích\nTruy xuất cấu trúc cây đề cương hoàn chỉnh của khóa học (gồm các chương học và bài giảng).\n\n- **Quyền hạn**: Tùy chọn xác thực (OptionalJWT).\n- **Phương thức**: `GET /api/v1/courses/:maKhoaHoc/syllabus`\n- **Bảo mật nội dung**: Nếu là khách vãng lai hoặc học viên chưa ghi danh, hệ thống tự động ẩn đường dẫn video chính thức, chỉ mở đường dẫn video cho các bài học có cờ `is_preview = True`."
+          },
+          "description": "### Mục đích\nTruy xuất cấu trúc cây đề cương hoàn chỉnh của khóa học (gồm các chương học và bài giảng).\n\n- **Quyền hạn**: Tùy chọn xác thực (OptionalJWT).\n- **Phương thức**: `GET /api/v1/courses/:maKhoaHoc/syllabus`\n- **Bảo mật nội dung**: Nếu là khách vãng lai hoặc học viên chưa ghi danh, hệ thống tự động ẩn đường dẫn video chính thức, chỉ mở đường dẫn video cho các bài học có cờ `is_preview = True`.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "4.2 Tạo Chương học Mới (POST /api/v1/admin/sections)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.content && jsonData.content.ma_chuong) {",
+                  "    pm.collectionVariables.set(\"sectionId\", jsonData.content.ma_chuong);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maKhoaHoc\": \"FE_REACT\",\n  \"tenChuong\": \"Chương 4: Kiểm thử Ứng dụng React và Triển khai\",\n  \"thuTu\": 4\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/admin/sections",
+            "description": "### Mục đích\nGiảng viên hoặc Quản trị viên tạo mới một chương học (Section) thuộc khóa học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `POST /api/v1/admin/sections`\n- **Dữ liệu gửi**: `courseId` (mã khóa học), `title` (tên chương), `orderIndex` (thứ tự).\n- **Tự động hóa Postman**: Lưu `maChuong` vừa tạo vào biến môi trường `sectionId`."
+          },
+          "description": "### Mục đích\nGiảng viên hoặc Quản trị viên tạo mới một chương học (Section) thuộc khóa học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `POST /api/v1/admin/sections`\n- **Dữ liệu gửi**: `courseId` (mã khóa học), `title` (tên chương), `orderIndex` (thứ tự).\n- **Tự động hóa Postman**: Lưu `maChuong` vừa tạo vào biến môi trường `sectionId`."
+        },
+        {
+          "name": "4.3 Cập nhật Chương học (PUT /api/v1/admin/sections/<id>)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenChuong\": \"Chương 4: Kiểm thử Tự động và Triển khai Thực tế\",\n  \"thuTu\": 4\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/admin/sections/{{sectionId}}",
+            "description": "### Mục đích\nGiảng viên cập nhật tên chương học hoặc thứ tự hiển thị của chương học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `PUT /api/v1/admin/sections/:id`\n- **Dữ liệu gửi**: `title`, `orderIndex`."
+          },
+          "description": "### Mục đích\nGiảng viên cập nhật tên chương học hoặc thứ tự hiển thị của chương học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `PUT /api/v1/admin/sections/:id`\n- **Dữ liệu gửi**: `title`, `orderIndex`.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "4.4 Tạo Bài học Mới (POST /api/v1/admin/lessons)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.content && jsonData.content.ma_bai_hoc) {",
+                  "    pm.collectionVariables.set(\"lessonId\", jsonData.content.ma_bai_hoc);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"maChuong\": {{sectionId}},\n  \"tenBaiHoc\": \"Bài 1: Kiểm thử Component với React Testing Library\",\n  \"loaiBaiHoc\": \"VIDEO\",\n  \"urlVideo\": \"dQw4w9WgXcQ\",\n  \"noiDungText\": \"Tài liệu hướng dẫn viết Unit Test cho React Component.\",\n  \"thoiLuongGiay\": 600,\n  \"thuTu\": 1,\n  \"isPreview\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/admin/lessons",
+            "description": "### Mục đích\nGiảng viên tạo mới một bài giảng (Lesson) thuộc một chương học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `POST /api/v1/admin/lessons`\n- **Dữ liệu gửi**: `sectionId`, `title`, `lessonType` (VIDEO/ARTICLE), `videoUrl`, `durationSeconds`, `isPreview`.\n- **Tự động hóa Postman**: Lưu `maBaiHoc` vừa tạo vào biến môi trường `lessonId`."
+          },
+          "description": "### Mục đích\nGiảng viên tạo mới một bài giảng (Lesson) thuộc một chương học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `POST /api/v1/admin/lessons`\n- **Dữ liệu gửi**: `sectionId`, `title`, `lessonType` (VIDEO/ARTICLE), `videoUrl`, `durationSeconds`, `isPreview`.\n- **Tự động hóa Postman**: Lưu `maBaiHoc` vừa tạo vào biến môi trường `lessonId`."
+        },
+        {
+          "name": "4.5 Cập nhật Bài học (PUT /api/v1/admin/lessons/<id>)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tenBaiHoc\": \"Bài 1: Kiểm thử Giao diện với Jest và React Testing Library\",\n  \"loaiBaiHoc\": \"VIDEO\",\n  \"urlVideo\": \"dQw4w9WgXcQ\",\n  \"noiDungText\": \"Tài liệu bài giảng đã cập nhật.\",\n  \"thoiLuongGiay\": 600,\n  \"thuTu\": 1,\n  \"isPreview\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/admin/lessons/{{lessonId}}",
+            "description": "### Mục đích\nGiảng viên cập nhật nội dung bài giảng, đường dẫn video hoặc thời lượng bài học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `PUT /api/v1/admin/lessons/:id`\n- **Dữ liệu gửi**: `title`, `videoUrl`, `durationSeconds`, `isPreview`."
+          },
+          "description": "### Mục đích\nGiảng viên cập nhật nội dung bài giảng, đường dẫn video hoặc thời lượng bài học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `PUT /api/v1/admin/lessons/:id`\n- **Dữ liệu gửi**: `title`, `videoUrl`, `durationSeconds`, `isPreview`.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "4.6 Xóa Bài học (DELETE /api/v1/admin/lessons/<id>)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/admin/lessons/{{lessonId}}",
+            "description": "### Mục đích\nGiảng viên xóa một bài giảng khỏi chương học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `DELETE /api/v1/admin/lessons/:id`\n- **Kết quả trả về**: Xóa bài học và tự động kích hoạt Signal cập nhật lại chỉ mục tìm kiếm."
+          },
+          "description": "### Mục đích\nGiảng viên xóa một bài giảng khỏi chương học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `DELETE /api/v1/admin/lessons/:id`\n- **Kết quả trả về**: Xóa bài học và tự động kích hoạt Signal cập nhật lại chỉ mục tìm kiếm.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "4.7 Xóa Chương học (DELETE /api/v1/admin/sections/<id>)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/admin/sections/{{sectionId}}",
+            "description": "### Mục đích\nGiảng viên xóa một chương học khỏi khóa học (tự động xóa toàn bộ bài học thuộc chương đó).\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `DELETE /api/v1/admin/sections/:id`\n- **Kết quả trả về**: Thông báo xóa chương học thành công."
+          },
+          "description": "### Mục đích\nGiảng viên xóa một chương học khỏi khóa học (tự động xóa toàn bộ bài học thuộc chương đó).\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `DELETE /api/v1/admin/sections/:id`\n- **Kết quả trả về**: Thông báo xóa chương học thành công.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Nhóm API quản lý cây đề cương giáo trình (Syllabus), tạo, sửa, xóa chương học và bài giảng; tự động bảo mật ẩn đường dẫn video với người chưa ghi danh."
+    },
+    {
+      "name": "5. Tiến độ Học tập & Ghi chú Bài học (7 API)",
+      "item": [
+        {
+          "name": "5.1 Cập nhật Tiến độ Xem Video Bài học (POST /api/v1/lessons/<maBaiHoc>/progress)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"startTime\": 0,\n  \"endTime\": 300,\n  \"thoiGianXem\": 300\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/lessons/846/progress",
+            "description": "### Mục đích\nHọc viên gửi heartbeat cập nhật đoạn thời gian vừa xem video hợp lệ bằng **Hook 2: Smart Video Progress & Anti-Cheat**.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/v1/lessons/:maBaiHoc/progress`\n- **Thuật toán Hook 2**: Sử dụng tìm kiếm nhị phân Bisect để hợp nhất đoạn `[0, 120]` vào mảng JSON `watchedIntervals`, tính tổng thời gian thực xem và tự động bật `daHoanThanh = True` khi đạt >= 80% thời lượng."
+          },
+          "description": "### Mục đích\nHọc viên gửi heartbeat cập nhật đoạn thời gian vừa xem video hợp lệ bằng **Hook 2: Smart Video Progress & Anti-Cheat**.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/v1/lessons/:maBaiHoc/progress`\n- **Thuật toán Hook 2**: Sử dụng tìm kiếm nhị phân Bisect để hợp nhất đoạn `[0, 120]` vào mảng JSON `watchedIntervals`, tính tổng thời gian thực xem và tự động bật `daHoanThanh = True` khi đạt >= 80% thời lượng.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "5.2 Kiểm tra Chống Tua nhanh Video (POST /api/v1/lessons/<maBaiHoc>/progress?strict_anticheat=true)",
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"thoiGianXem\": 590,\n  \"daHoanThanh\": true\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/lessons/848/progress?strict_anticheat=true",
+            "description": "### Mục đích\nKiểm thử cơ chế **chống gian lận tua nhanh video** của Hook 2 khi học viên cố ý tua nhảy cóc từ giây 120 đến giây 850 ngay lập tức.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/v1/lessons/:maBaiHoc/progress`\n- **Thuật toán Hook 2**: Độ lệch video lớn hơn vận tốc thực tế cho phép (`delta_video > 2.5 * delta_real + 15`), hệ thống chặn đoạn tua và chỉ cộng dồn 5 giây hợp lệ `[845, 850]`, không cho phép nhảy cóc để hoàn thành bài giảng."
+          },
+          "description": "### Mục đích\nKiểm thử cơ chế **chống gian lận tua nhanh video** của Hook 2 khi học viên cố ý tua nhảy cóc từ giây 120 đến giây 850 ngay lập tức.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/v1/lessons/:maBaiHoc/progress`\n- **Thuật toán Hook 2**: Độ lệch video lớn hơn vận tốc thực tế cho phép (`delta_video > 2.5 * delta_real + 15`), hệ thống chặn đoạn tua và chỉ cộng dồn 5 giây hợp lệ `[845, 850]`, không cho phép nhảy cóc để hoàn thành bài giảng.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "5.3 Xem Tiến độ Hoàn thành Khóa học (GET /api/v1/courses/<maKhoaHoc>/my-progress)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/courses/FE_REACT/my-progress",
+            "description": "### Mục đích\nTính toán và hiển thị tỷ lệ phần trăm bài học đã hoàn thành của học viên trên toàn bộ khóa học.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `GET /api/v1/courses/:maKhoaHoc/my-progress`\n- **Kết quả trả về**: Tổng số bài học, số bài đã hoàn thành và phần trăm tiến độ tổng thể."
+          },
+          "description": "### Mục đích\nTính toán và hiển thị tỷ lệ phần trăm bài học đã hoàn thành của học viên trên toàn bộ khóa học.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `GET /api/v1/courses/:maKhoaHoc/my-progress`\n- **Kết quả trả về**: Tổng số bài học, số bài đã hoàn thành và phần trăm tiến độ tổng thể.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "5.4 Học tiếp Bài học Gần nhất (GET /api/v1/users/resume-learning)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/users/resume-learning",
+            "description": "### Mục đích\nKhôi phục bài học và vị trí giây video mà học viên vừa tương tác gần nhất để tiếp tục học tập mà không cần tìm lại.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `GET /api/v1/users/resume-learning`\n- **Kết quả trả về**: Khóa học gần nhất, bài học gần nhất và mốc giây đang xem dở."
+          },
+          "description": "### Mục đích\nKhôi phục bài học và vị trí giây video mà học viên vừa tương tác gần nhất để tiếp tục học tập mà không cần tìm lại.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `GET /api/v1/users/resume-learning`\n- **Kết quả trả về**: Khóa học gần nhất, bài học gần nhất và mốc giây đang xem dở.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "5.5 Xem Danh sách Ghi chú trong Bài học (GET /api/v1/lessons/<maBaiHoc>/notes)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/lessons/846/notes",
+            "description": "### Mục đích\nLấy danh sách các ghi chú cá nhân của học viên được gắn theo từng mốc giây trong video bài giảng.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `GET /api/v1/lessons/:maBaiHoc/notes`\n- **Kết quả trả về**: Mảng ghi chú gồm mã ghi chú, mốc giây (timestamp) và nội dung ghi chú."
+          },
+          "description": "### Mục đích\nLấy danh sách các ghi chú cá nhân của học viên được gắn theo từng mốc giây trong video bài giảng.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `GET /api/v1/lessons/:maBaiHoc/notes`\n- **Kết quả trả về**: Mảng ghi chú gồm mã ghi chú, mốc giây (timestamp) và nội dung ghi chú.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "5.6 Tạo Ghi chú Mới theo Mốc thời gian Video (POST /api/v1/lessons/<maBaiHoc>/notes)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.content && jsonData.content.ma_ghi_chu) {",
+                  "    pm.collectionVariables.set(\"noteId\", jsonData.content.ma_ghi_chu);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"timestamp\": 120,\n  \"noiDung\": \"Ghi chú: Sử dụng useMemo khi tính toán dữ liệu lớn trong React.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/lessons/846/notes",
+            "description": "### Mục đích\nHọc viên tạo ghi chú mới ngay tại mốc thời gian video đang phát.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/v1/lessons/:maBaiHoc/notes`\n- **Dữ liệu gửi**: `timestamp` (vị trí giây), `content` (nội dung ghi chú tiếng Việt).\n- **Tự động hóa Postman**: Lưu `maGhiChu` vừa tạo vào biến môi trường `noteId`."
+          },
+          "description": "### Mục đích\nHọc viên tạo ghi chú mới ngay tại mốc thời gian video đang phát.\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/v1/lessons/:maBaiHoc/notes`\n- **Dữ liệu gửi**: `timestamp` (vị trí giây), `content` (nội dung ghi chú tiếng Việt).\n- **Tự động hóa Postman**: Lưu `maGhiChu` vừa tạo vào biến môi trường `noteId`."
+        },
+        {
+          "name": "5.7 Xóa Ghi chú Bài học (DELETE /api/v1/notes/<maGhiChu>)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/notes/{{noteId}}",
+            "description": "### Mục đích\nHọc viên xóa một ghi chú cá nhân (có kiểm tra quyền sở hữu ghi chú, ngăn chặn xóa ghi chú của người khác).\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `DELETE /api/v1/notes/:maGhiChu`\n- **Kết quả trả về**: Thông báo xóa thành công ghi chú."
+          },
+          "description": "### Mục đích\nHọc viên xóa một ghi chú cá nhân (có kiểm tra quyền sở hữu ghi chú, ngăn chặn xóa ghi chú của người khác).\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `DELETE /api/v1/notes/:maGhiChu`\n- **Kết quả trả về**: Thông báo xóa thành công ghi chú.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Nhóm API quản lý tiến độ xem video, tích hợp Hook 2 (hợp nhất khoảng thời gian xem bằng Bisect và chống gian lận tua nhanh video), khôi phục bài học đang học dở."
+    },
+    {
+      "name": "6. Quản lý Bài tập, Nộp bài & Chấm điểm (8 API)",
+      "item": [
+        {
+          "name": "6.1 Học viên Xem Đề Bài tập của Bài học (GET /api/v1/lessons/<maBaiHoc>/assignment)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/lessons/846/assignment",
+            "description": "### Mục đích\nHọc viên xem đề bài tập thực hành gắn với bài giảng, kèm trạng thái bài nộp của cá nhân (chưa nộp, chưa chấm, hoặc đã chấm kèm điểm số).\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `GET /api/v1/lessons/:maBaiHoc/assignment`\n- **Kết quả trả về**: Tiêu đề bài tập, mô tả yêu cầu đề bài, hạn nộp và thông tin bài làm cá nhân."
+          },
+          "description": "### Mục đích\nHọc viên xem đề bài tập thực hành gắn với bài giảng, kèm trạng thái bài nộp của cá nhân (chưa nộp, chưa chấm, hoặc đã chấm kèm điểm số).\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `GET /api/v1/lessons/:maBaiHoc/assignment`\n- **Kết quả trả về**: Tiêu đề bài tập, mô tả yêu cầu đề bài, hạn nộp và thông tin bài làm cá nhân.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "6.2 Học viên Nộp Bài tập (POST /api/v1/assignments/<maBaiTap>/submit)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.content && jsonData.content.ma_luot_nop) {",
+                  "    pm.collectionVariables.set(\"submissionId\", jsonData.content.ma_luot_nop);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"linkNopBai\": \"https://github.com/student01/react-course-project\",\n  \"ghiChuStudent\": \"Em đã hoàn thành đầy đủ các yêu cầu của bài tập thực hành ạ.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/assignments/259/submit",
+            "description": "### Mục đích\nHọc viên nộp bài tập thực hành bằng đường dẫn liên kết (Github, Google Drive, Codepen,...). Hệ thống kiểm tra hợp lệ định dạng URL (phải bắt đầu bằng http:// hoặc https://).\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/v1/assignments/:maBaiTap/submit`\n- **Dữ liệu gửi**: `submissionUrl` (đường dẫn bài nộp), `notes` (ghi chú của học viên).\n- **Tự động hóa Postman**: Lưu `maLuotNop` vừa nộp vào biến môi trường `submissionId`."
+          },
+          "description": "### Mục đích\nHọc viên nộp bài tập thực hành bằng đường dẫn liên kết (Github, Google Drive, Codepen,...). Hệ thống kiểm tra hợp lệ định dạng URL (phải bắt đầu bằng http:// hoặc https://).\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `POST /api/v1/assignments/:maBaiTap/submit`\n- **Dữ liệu gửi**: `submissionUrl` (đường dẫn bài nộp), `notes` (ghi chú của học viên).\n- **Tự động hóa Postman**: Lưu `maLuotNop` vừa nộp vào biến môi trường `submissionId`."
+        },
+        {
+          "name": "6.3 Học viên Xem Bảng điểm & GPA Cá nhân (GET /api/v1/users/my-grades)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{studentToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/users/my-grades",
+            "description": "### Mục đích\nHọc viên xem bảng điểm tổng hợp của toàn bộ các bài tập đã nộp, xem nhận xét của giảng viên và điểm trung bình cộng tích lũy (GPA).\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `GET /api/v1/users/my-grades`\n- **Kết quả trả về**: Danh sách bài đã làm kèm điểm số, lời phê giảng viên và điểm GPA tích lũy."
+          },
+          "description": "### Mục đích\nHọc viên xem bảng điểm tổng hợp của toàn bộ các bài tập đã nộp, xem nhận xét của giảng viên và điểm trung bình cộng tích lũy (GPA).\n\n- **Quyền hạn**: Học viên (`HV`).\n- **Phương thức**: `GET /api/v1/users/my-grades`\n- **Kết quả trả về**: Danh sách bài đã làm kèm điểm số, lời phê giảng viên và điểm GPA tích lũy.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "6.4 Giảng viên Tạo Bài tập Mới cho Bài học (POST /api/v1/admin/lessons/<maBaiHoc>/assignment)",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});",
+                  "",
+                  "var jsonData = pm.response.json();",
+                  "if (jsonData.content && jsonData.content.ma_bai_tap) {",
+                  "    pm.collectionVariables.set(\"assignmentId\", jsonData.content.ma_bai_tap);",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
+          "request": {
+            "method": "POST",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tieuDe\": \"Bài tập thực hành: Thiết kế Component với JSX\",\n  \"deBaiMoTa\": \"Xây dựng bộ Component hiển thị thẻ khóa học và nộp link GitHub.\",\n  \"hanNop\": \"2026-12-31T23:59:59\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/admin/lessons/847/assignment",
+            "description": "### Mục đích\nGiảng viên hoặc Quản trị viên tạo đề bài tập thực hành mới gắn với một bài giảng.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên (`GV`, `GVU`).\n- **Phương thức**: `POST /api/v1/admin/lessons/:maBaiHoc/assignment`\n- **Dữ liệu gửi**: `title` (tiêu đề), `description` (yêu cầu đề bài), `dueDate` (hạn nộp).\n- **Tự động hóa Postman**: Lưu `maBaiTap` vừa tạo vào biến môi trường `assignmentId`."
+          },
+          "description": "### Mục đích\nGiảng viên hoặc Quản trị viên tạo đề bài tập thực hành mới gắn với một bài giảng.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên (`GV`, `GVU`).\n- **Phương thức**: `POST /api/v1/admin/lessons/:maBaiHoc/assignment`\n- **Dữ liệu gửi**: `title` (tiêu đề), `description` (yêu cầu đề bài), `dueDate` (hạn nộp).\n- **Tự động hóa Postman**: Lưu `maBaiTap` vừa tạo vào biến môi trường `assignmentId`."
+        },
+        {
+          "name": "6.5 Giảng viên Cập nhật Đề Bài tập (PUT /api/v1/admin/assignments/<maBaiTap>)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"tieuDe\": \"Bài tập thực hành: Thiết kế Component và Props trong React 18\",\n  \"deBaiMoTa\": \"Xây dựng bộ Component hiển thị danh sách khóa học kèm chức năng lọc.\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/admin/assignments/{{assignmentId}}",
+            "description": "### Mục đích\nGiảng viên chỉnh sửa tiêu đề, mô tả đề bài hoặc gia hạn nộp bài cho học viên.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `PUT /api/v1/admin/assignments/:maBaiTap`\n- **Dữ liệu gửi**: `title`, `description`, `dueDate`."
+          },
+          "description": "### Mục đích\nGiảng viên chỉnh sửa tiêu đề, mô tả đề bài hoặc gia hạn nộp bài cho học viên.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `PUT /api/v1/admin/assignments/:maBaiTap`\n- **Dữ liệu gửi**: `title`, `description`, `dueDate`.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "6.6 Giảng viên Xem Danh sách Bài nộp theo Bài tập (GET /api/v1/admin/assignments/<maBaiTap>/submissions)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/admin/assignments/259/submissions",
+            "description": "### Mục đích\nGiảng viên xem danh sách toàn bộ bài nộp của tất cả học viên trong một bài tập để tiến hành chấm điểm.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `GET /api/v1/admin/assignments/:maBaiTap/submissions`\n- **Kết quả trả về**: Danh sách học viên nộp bài, đường dẫn bài làm, trạng thái chấm và điểm số."
+          },
+          "description": "### Mục đích\nGiảng viên xem danh sách toàn bộ bài nộp của tất cả học viên trong một bài tập để tiến hành chấm điểm.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `GET /api/v1/admin/assignments/:maBaiTap/submissions`\n- **Kết quả trả về**: Danh sách học viên nộp bài, đường dẫn bài làm, trạng thái chấm và điểm số.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "6.7 Giảng viên Chấm điểm & Nhận xét Bài nộp (PUT /api/v1/admin/submissions/<maLuotNop>/grade)",
+          "request": {
+            "method": "PUT",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"diemSo\": 96,\n  \"nhanXetGv\": \"Bài làm rất tốt, tổ chức mã nguồn sạch sẽ và đúng chuẩn!\"\n}"
+            },
+            "url": "{{baseUrl}}/api/v1/admin/submissions/{{submissionId}}/grade",
+            "description": "### Mục đích\nGiảng viên chấm điểm bài làm của học viên (ràng buộc điểm số từ 0 đến 100) kèm lời nhận xét đánh giá bằng tiếng Việt có dấu.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `PUT /api/v1/admin/submissions/:maLuotNop/grade`\n- **Dữ liệu gửi**: `score` (điểm số thang 100), `feedback` (lời phê của giảng viên).\n- **Kết quả trả về**: Bản ghi lượt nộp sau khi chấm điểm, chuyển trạng thái sang `DA_CHAM`."
+          },
+          "description": "### Mục đích\nGiảng viên chấm điểm bài làm của học viên (ràng buộc điểm số từ 0 đến 100) kèm lời nhận xét đánh giá bằng tiếng Việt có dấu.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `PUT /api/v1/admin/submissions/:maLuotNop/grade`\n- **Dữ liệu gửi**: `score` (điểm số thang 100), `feedback` (lời phê của giảng viên).\n- **Kết quả trả về**: Bản ghi lượt nộp sau khi chấm điểm, chuyển trạng thái sang `DA_CHAM`.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "6.8 Giảng viên Xóa Bài tập (DELETE /api/v1/admin/assignments/<maBaiTap>)",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/admin/assignments/{{assignmentId}}",
+            "description": "### Mục đích\nGiảng viên xóa đề bài tập khỏi bài học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `DELETE /api/v1/admin/assignments/:maBaiTap`\n- **Kết quả trả về**: Thông báo xóa bài tập thành công."
+          },
+          "description": "### Mục đích\nGiảng viên xóa đề bài tập khỏi bài học.\n\n- **Quyền hạn**: Giảng viên / Quản trị viên.\n- **Phương thức**: `DELETE /api/v1/admin/assignments/:maBaiTap`\n- **Kết quả trả về**: Thông báo xóa bài tập thành công.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Nhóm API cho phép học viên ghi chép, xem lại và xóa các ghi chú cá nhân gắn theo từng mốc giây trong video bài giảng."
+    },
+    {
+      "name": "7. Thống kê Hệ thống dành cho Quản trị viên (2 API)",
+      "item": [
+        {
+          "name": "7.1 Thống kê Tổng quan Toàn Hệ thống (GET /api/v1/admin/analytics/quick-stats)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/admin/analytics/quick-stats",
+            "description": "### Mục đích\nQuản trị viên xem báo cáo số liệu thống kê nhanh toàn bộ nền tảng (tổng số học viên, giảng viên, khóa học, bài học, lượt ghi danh, tỷ lệ hoàn thành trung bình, bài nộp chờ chấm).\n\n- **Quyền hạn**: Quản trị viên / Giảng viên (`GVU`, `GV`).\n- **Phương thức**: `GET /api/v1/admin/analytics/quick-stats`\n- **Kết quả trả về**: Bảng dữ liệu thống kê tổng hợp phục vụ dashboard quản trị."
+          },
+          "description": "### Mục đích\nQuản trị viên xem báo cáo số liệu thống kê nhanh toàn bộ nền tảng (tổng số học viên, giảng viên, khóa học, bài học, lượt ghi danh, tỷ lệ hoàn thành trung bình, bài nộp chờ chấm).\n\n- **Quyền hạn**: Quản trị viên / Giảng viên (`GVU`, `GV`).\n- **Phương thức**: `GET /api/v1/admin/analytics/quick-stats`\n- **Kết quả trả về**: Bảng dữ liệu thống kê tổng hợp phục vụ dashboard quản trị.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        },
+        {
+          "name": "7.2 Bảng xếp hạng Học viên Tiêu biểu (GET /api/v1/admin/analytics/top-students)",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{adminToken}}"
+              }
+            ],
+            "url": "{{baseUrl}}/api/v1/admin/analytics/top-students",
+            "description": "### Mục đích\nQuản trị viên xem bảng xếp hạng Top 10 học viên xuất sắc nhất hệ thống (theo số lượng bài học hoàn thành nhiều nhất).\n\n- **Quyền hạn**: Quản trị viên / Giảng viên.\n- **Phương thức**: `GET /api/v1/admin/analytics/top-students`\n- **Kết quả trả về**: Bảng xếp hạng học viên kèm số lượng bài học đã hoàn thành."
+          },
+          "description": "### Mục đích\nQuản trị viên xem bảng xếp hạng Top 10 học viên xuất sắc nhất hệ thống (theo số lượng bài học hoàn thành nhiều nhất).\n\n- **Quyền hạn**: Quản trị viên / Giảng viên.\n- **Phương thức**: `GET /api/v1/admin/analytics/top-students`\n- **Kết quả trả về**: Bảng xếp hạng học viên kèm số lượng bài học đã hoàn thành.",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "type": "text/javascript",
+                "exec": [
+                  "pm.test(\"Trạng thái phản hồi thành công (Status 200/201)\", function () {",
+                  "    pm.expect(pm.response.code).to.be.oneOf([200, 201]);",
+                  "});"
+                ]
+              }
+            }
+          ]
+        }
+      ],
+      "description": "Nhóm API phục vụ quy trình giao đề bài tập, nộp bài, giảng viên chấm điểm kèm nhận xét, xem GPA học viên và thống kê tổng quan nền tảng."
+    }
+  ]
+}
